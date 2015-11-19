@@ -3,8 +3,10 @@ A patch generation and manipulation utility for the Roland JX-8P
 
 I use mido and pygame, and you'll see me using it in the example file.
 
-For some reason, portmidi acts strange in my environment and I can only get mido to open ports after I do a `pygame.midi.init()`
-
+For some reason, portmidi acts strange in my environment and I can only get mido to open ports after I do a 
+```
+pygame.midi.init()
+```
 Anyways, if you know what you're doing, any midi backend which can send sysex bulk dumps should work.
 
 
@@ -19,7 +21,9 @@ mi=mido.open_input("Bitstream 3X")
 ```
 
 # import the patcher
-`import jx8p_patcher as jx8p`
+```
+import jx8p_patcher as jx8p
+```
 This module has stuff for working with the jx8p sysex files and will create objects which represent a JX-8P patch
 
 # make patch instances
