@@ -138,7 +138,7 @@ class Patch:
     if jx8p_sysex_file_path==None:
       print('give me a patch, dummy.')
       return 1
-    syx = mido.read_syx_file(jx8p_sysex_file_path)[0].bytes() # yields and array of bytes
+    syx = mido.read_syx_file(jx8p_sysex_file_path)[0].bytes() # yields an array of bytes
     
     if syx[0] != 0xF0:
       print 'INVALID SYX: MALFORMED HEADER'
