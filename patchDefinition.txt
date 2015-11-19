@@ -1,0 +1,102 @@
+patchDefinition.txt
+
+"""
+# Data definition for loading different sysex to px8p_patcher
+#
+# Each line represents one parameter of a patch as definied by the sysex implementation of the device,in the format:
+#
+# {parameter number} 'PARAMETER NAME' [(parameter_state_1) (parameter_state_2) (parameter_state_3) ...]
+#
+# where each parameter_state is represented as:
+# (parameter_state_upper_bound,parameter_state_name)
+"""
+
+
+######################
+# Device Information #
+######################
+
+#Roland Sysex ID
+MANUFACTURER_ID=0x41
+
+PATCH_PARAMETER_COUNT=59
+
+
+
+#########################
+# Parameter definitions #
+#########################
+
+{000} 'Character 1' [(127,'ASCII')] 'B'
+{001} 'Character 2' [(127,'ASCII')] 'L'
+{002} 'Character 3' [(127,'ASCII')] 'A'
+{003} 'Character 4' [(127,'ASCII')] 'N'
+{004} 'Character 5' [(127,'ASCII')] 'K'
+{005} 'Character 6' [(127,'ASCII')] 'P'
+{006} 'Character 7' [(127,'ASCII')] 'A'
+{007} 'Character 2' [(127,'ASCII')] 'T'
+{008} 'Character 2' [(127,'ASCII')] 'C'
+{009} 'Character 2' [(127,'ASCII')] 'H'
+
+{010}
+
+{011} 'DCO-1 RANGE' [(31,'16\'') (63,'8\'') (95,'4\'') (127,'2\'')]
+{012} 'DCO-1 WAVEFORM' [(31,'Noise') (63,'Sawtooth') (95,'Pulse') (127,'Square')]
+{013} 'DCO-1 TUNE' [(5,'-12 Semitone') (10,'-11 Semitone') (15,'-10 Semitone') (20,'-9 Semitone') (25,'-8 Semitone') (30,'-7 Semitone') (35,'-6 Semitone') (40,'-5 Semitone') (45,'-4 Semitone') (50,'-3 Semitone') (55,'-2 Semitone') (60,'-1 Semitone') (66,'+0') (71,'+1 Semitone') (76,'+2 Semitone') (81,'+3 Semitone') (86,'+4 Semitone') (91,'+5 Semitone') (96,'+6 Semitone') (101,'+7 Semitone') (106,'+8 Semitone') (111,'+9 Semitone') (116,'+10 Semitone') (121,'+11 Semitone') (127,'+12 Semitone')])
+{014} 'DCO-1 LFO MOD DEPTH' [(127,'VALUE')]
+{015} 'DCO-1 ENV MOD DEPTH' [(127,'VALUE')]
+
+{016} 'DCO-2 RANGE' [(31,'16\'') (63,'8\'') (95,'4\'') (127,'2\'')]
+{017} 'DCO-2 WAVEFORM' [(31,'Noise') (63,'Sawtooth') (95,'Pulse') (127,'Square')]
+{018} 'DCO-2 CROSSMOD' [(31,'OFF') (63,'Sync 1') (95,'Sync 2') (127,'XMOD')]
+{019} 'DCO-2 TUNE' [(5,'-12 Semitone') (10,'-11 Semitone') (15,'-10 Semitone') (20,'-9 Semitone') (25,'-8 Semitone') (30,'-7 Semitone') (35,'-6 Semitone') (40,'-5 Semitone') (45,'-4 Semitone') (50,'-3 Semitone') (55,'-2 Semitone') (60,'-1 Semitone') (66,'+0') (71,'+1 Semitone') (76,'+2 Semitone') (81,'+3 Semitone') (86,'+4 Semitone') (91,'+5 Semitone') (96,'+6 Semitone') (101,'+7 Semitone') (106,'+8 Semitone') (111,'+9 Semitone') (116,'+10 Semitone') (121,'+11 Semitone') (127,'+12 Semitone')]
+{020} 'DCO-2 FINE TUNE' [(1,'-50') (2,'-49') (3,'-48') (5,'-47') (6,'-46') (7,'-45') (8,'-44') (10,'-43') (11,'-42') (12,'-41') (13,'-40') (15,'-39') (16,'-38') (17,'-37') (18,'-36') (20,'-35') (21,'-34') (22,'-33') (23,'-32') (25,'-31') (26,'-30') (27,'-29') (28,'-28') (30,'-27') (31,'-26') (32,'-25') (33,'-24') (35,'-23') (36,'-22') (37,'-21') (38,'-20') (40,'-19') (41,'-18') (42,'-17') (44,'-16') (45,'-15') (46,'-14') (47,'-13') (49,'-12') (50,'-11') (51,'-10') (52,'-9') (54,'-8') (55,'-7') (56,'-6') (57,'-5') (59,'-4') (60,'-3') (61,'-2') (62,'-1') (64,'+0') (65,'+1') (66,'+2') (67,'+3') (69,'+4') (70,'+5') (71,'+6') (72,'+7') (73,'+8') (74,'+8') (75,'+9') (76,'+10') (77,'+11') (79,'+12') (80,'+13') (81,'+14') (82,'+15') (84,'+16') (85,'+17') (86,'+18') (88,'+19') (89,'+20') (90,'+21') (91,'+22') (93,'+23') (94,'+24') (95,'+25') (96,'+26') (98,'+27') (99,'+28') (100,'+29') (101,'+30') (103,'+31') (104,'+32') (105,'+33') (106,'+34') (108,'+35') (109,'+36') (110,'+37') (111,'+38') (113,'+39') (114,'+40') (115,'+41') (116,'+42') (118,'+43') (119,'+44') (120,'+45') (121,'+46') (123,'+47') (124,'+48') (125,'+49') (127,'+50')]
+{021} 'DCO-2 LFO MOD DEPTH' [(127,'VALUE')]
+{022} 'DCO-2 ENV MOD DEPTH' [(127,'VALUE')]
+
+{023}
+{024}
+{025}
+
+{026} 'DCO DYNAMICS' [(31,'Off') (63,'1') (95,'2') (127,'3')]
+{027} 'DCO ENV MODE' [(31,'ENV-2 INVERTED') (63,'ENV-2 NORMAL') (95,'ENV-1 INVERTED') (127,'ENV-1 NORMAL')]
+
+{028} 'MIXER DCO-1' [(127,'VALUE')]
+{029} 'MIXER DCO-2' [(127,'VALUE')]
+{030} 'MIXER ENV MOD DEPTH' [(127,'VALUE')]
+{031} 'MIXER DYNAMICS' [(31,'Off') (63,'1') (95,'2') (127,'3')]
+{032} 'MIXER ENV MODE' [(31,'ENV-2 INVERTED') (63,'ENV-2 NORMAL') (95,'ENV-1 INVERTED') (127,'ENV-1 NORMAL')]
+
+{033} 'HPF CUTOFF FREQ' [(31,'0') (63,'1') (95,'2') (127,'3')]
+{034} 'VCF CUTOFF FREQ' [(127,'VALUE')]
+{035} 'VCF RESONANCE' [(127,'VALUE')]
+{036} 'VCF LFO MOD DEPTH' [(127,'VALUE')]
+{037} 'VCF ENV MOD DEPTH' [(127,'VALUE')]
+{038} 'VCF KEY FOLLOW' [(127,'VALUE')]
+{039} 'VCF DYNAMICS' [(31,'Off') (63,'1') (95,'2') (127,'3')]
+{040} 'VCF ENV MODE' [(31,'ENV-2 INVERTED') (63,'ENV-2 NORMAL') (95,'ENV-1 INVERTED') (127,'ENV-1 NORMAL')]
+
+{041} 'VCA LEVEL' [(127,'VALUE')]
+{042} 'VCA DYNAMICS' [(31,'Off') (63,'1') (95,'2') (127,'3')]
+
+{043} 'CHORUS' [(31,'Off') (63,'1') (127,'2')]
+
+{044} 'LFO WAVEFORM' [(31,'RANDOM') (63,'SQUARE') (127,'TRIANGLE')]
+{045} 'LFO DELAY TIME' [(127,'VALUE')]
+{046} 'LFO RATE' [(127,'VALUE')]
+
+{047} 'ENV-1 ATTACK' [(127,'VALUE')]
+{048} 'ENV-1 DECAY' [(127,'VALUE')]
+{049} 'ENV-1 SUSTAIN' [(127,'VALUE')]
+{050} 'ENV-1 RELEASE' [(127,'VALUE')]
+{051} 'ENV-1 KEY FOLLOW' [(31,'OFF') (63,'1') (95,'2') (127,'3')]
+
+{052} 'ENV-2 ATTACK' [(127,'VALUE)]
+{053} 'ENV-2 DECAY' [(127,'VALUE')]
+{054} 'ENV-2 SUSTAIN' [(127,'VALUE')]
+{055} 'ENV-2 RELEASE' [(127,'VALUE')]
+{056} 'ENV-2 KEY FOLLOW' [(31,'OFF') (63,'1') (95,'2') (127,'3')]
+
+{057}
+
+{058} 'VCA ENV MODE' [(63,'GATE') (127,'ENV-2 NORMAL')]
