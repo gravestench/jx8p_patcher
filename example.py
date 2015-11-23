@@ -14,8 +14,11 @@ import jx8p_patcher as jx8p
 
 # This is my midi controller, which has din-midi and usb-midi
 # the jx8p is connected to this controller
-mo=portmidi.open_output("Bitstream 3x")
-mi=portmidi.open_input("Bitstream 3x")
+# mo=portmidi.open_output("Bitstreama 3x")
+# mi=portmidi.open_input("Bitstream 3x")
+
+mo=portmidi.open_output("LoopBe Internal MIDI")
+mi=portmidi.open_input("LoopBe Internal MIDI")
 
 virtual_name="jx8p_patcher"
 vmo=rtmidi.open_output(virtual_name, virtual=True)
@@ -89,3 +92,15 @@ def cclerp(patch1, patch2):
     if m.type == 'control_change':
       p=jx8p.lerp2(patch1, patch2, m.value)
       mo.send(jx8p.message(p))
+
+p1 = jx8p.Patch()
+p2 = jx8p.Patch()
+for p in p1.parameters:
+  p.value=127
+
+for p in p2.parameters:
+  p.value=0
+
+for i in range(0,128):
+  [p.value for p in jx8p.lerp2(p1,p2,i).parameters][0]
+
