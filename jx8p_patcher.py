@@ -328,15 +328,15 @@ def lerp2(p1, p2, step=0):
   max interpolation steps is assumed to be 127, since we're doing midi stuff and all data bytes are < 128
   """
   p=Patch()
-  if step == 0:
-    return p1
-  elif step == 127:
-    return p2
+  scale = step/float(127)
   for index in range(0,len(p1.parameters)):
     # pdb.set_trace()
-    if p.parameters[index] != None:
+    if p.parameters[index] != None: # if the parameter is not undefined
       lerp_vals=[p1.parameters[index].value, p2.parameters[index].value]
-      p.parameters[index].value = int(step/float(128)*abs(lerp_vals[0]-lerp_vals[1])+min(lerp_vals)) # Transformation
+      difference = lerp_vals[0]-lerp_vals[1]
+      p.parameters[index].value = int(round(((1-scale)*lerp_vals[0]) + (scale*lerp_vals[1])))
+
+
   return p
 
 def message(p1):
