@@ -3,18 +3,9 @@ from pygame import midi as midi
 import random
 import os
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
 import jx8p_patcher as jx8p
 
 mido.set_backend('mido.backends.rtmidi')
->>>>>>> Stashed changes
-=======
-import jx8p_patcher as jx8p
-
-mido.set_backend('mido.backends.rtmidi')
->>>>>>> Stashed changes
 
 # for some reason, mido can't connect in my environment unless
 # i use pygame (to initialize portmidi...?)
@@ -26,37 +17,25 @@ import jx8p_patcher as jx8p
 
 # This is my midi controller, which has din-midi and usb-midi
 # the jx8p is connected to this controller
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 # mo=portmidi.open_output("Bitstreama 3x")
 # mi=portmidi.open_input("Bitstream 3x")
 
-mo=portmidi.open_output("LoopBe Internal MIDI")
-mi=portmidi.open_input("LoopBe Internal MIDI")
+# my_midi_controller = "LoopBe Internal MIDI"
+# mo=portmidi.open_output(my_midi_controller)
+# mi=portmidi.open_input(my_midi_controller)
 
-virtual_name="jx8p_patcher"
-vmo=rtmidi.open_output(virtual_name, virtual=True)
-vmi=rtmidi.open_input(virtual_name, virtual=True)
-=======
-mo=mido.open_output("LoopBe Internal MIDI")
-mi=mido.open_input("LoopBe Internal MIDI")
->>>>>>> Stashed changes
-=======
-mo=mido.open_output("LoopBe Internal MIDI")
-mi=mido.open_input("LoopBe Internal MIDI")
->>>>>>> Stashed changes
+# virtual_name="jx8p_patcher"
+# vmo=rtmidi.open_output(virtual_name, virtual=True)
+# vmi=rtmidi.open_input(virtual_name, virtual=True)
 
-# This is my jx8p patcher
-import jx8p_patcher as jx8p
-
-midi.init()
+midi.init() # portmidi doesnt really work on my windows system unless i use pygame.midi.init()
 
 # I have a bunch of .syx files for the jx8p
 # here is an example of loading a .syx file as a patch
 p1=jx8p.Patch(r"C:\Users\Dylan\Downloads\jx8p.syx\jcb\dryrhodes.syx")
 p2=jx8p.Patch(r"C:\Users\Dylan\Downloads\jx8p.syx\jcb\celeste1.syx")
 # You send a patch to a mido output port like this:
-# mo.send(jx8p.message(p))
+# mo.send(jx8p.message(patch_instance))
 
 def cclerp(patch1, patch2):
   """
@@ -114,21 +93,18 @@ def cclerp(patch1, patch2):
     if m.type == 'control_change':
       p=jx8p.lerp2(patch1, patch2, m.value)
       mo.send(jx8p.message(p))
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
 
-p1 = jx8p.Patch()
-p2 = jx8p.Patch()
-for p in p1.parameters:
-  p.value=127
+# p1 = jx8p.Patch()
+# p2 = jx8p.Patch()
 
-for p in p2.parameters:
-  p.value=0
+# create patch with all parameters as 127
+# for p in p1.parameters:
+#   p.value=127
 
-for i in range(0,128):
-  [p.value for p in jx8p.lerp2(p1,p2,i).parameters][0]
+# create patch with all parameters as 0
+# for p in p2.parameters:
+#   p.value=0
 
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+# testing the linear interpolation function
+# for i in range(0,128):
+#   [p.value for p in jx8p.lerp2(p1,p2,i).parameters][0]
