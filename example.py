@@ -3,6 +3,12 @@ from pygame import midi as midi
 import random
 import os
 
+<<<<<<< Updated upstream
+=======
+import jx8p_patcher as jx8p
+
+mido.set_backend('mido.backends.rtmidi')
+>>>>>>> Stashed changes
 
 # for some reason, mido can't connect in my environment unless
 # i use pygame (to initialize portmidi...?)
@@ -14,6 +20,7 @@ import jx8p_patcher as jx8p
 
 # This is my midi controller, which has din-midi and usb-midi
 # the jx8p is connected to this controller
+<<<<<<< Updated upstream
 # mo=portmidi.open_output("Bitstreama 3x")
 # mi=portmidi.open_input("Bitstream 3x")
 
@@ -23,6 +30,10 @@ mi=portmidi.open_input("LoopBe Internal MIDI")
 virtual_name="jx8p_patcher"
 vmo=rtmidi.open_output(virtual_name, virtual=True)
 vmi=rtmidi.open_input(virtual_name, virtual=True)
+=======
+mo=mido.open_output("LoopBe Internal MIDI")
+mi=mido.open_input("LoopBe Internal MIDI")
+>>>>>>> Stashed changes
 
 # This is my jx8p patcher
 import jx8p_patcher as jx8p
@@ -92,6 +103,7 @@ def cclerp(patch1, patch2):
     if m.type == 'control_change':
       p=jx8p.lerp2(patch1, patch2, m.value)
       mo.send(jx8p.message(p))
+<<<<<<< Updated upstream
 
 p1 = jx8p.Patch()
 p2 = jx8p.Patch()
@@ -104,3 +116,5 @@ for p in p2.parameters:
 for i in range(0,128):
   [p.value for p in jx8p.lerp2(p1,p2,i).parameters][0]
 
+=======
+>>>>>>> Stashed changes
