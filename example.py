@@ -5,25 +5,20 @@ import os
 
 import jx8p_patcher as jx8p
 
-mido.set_backend('mido.backends.rtmidi')
-
-# for some reason, mido can't connect in my environment unless
-# i use pygame (to initialize portmidi...?)
-
 rtmidi = mido.Backend('mido.backends.rtmidi')
 portmidi = mido.Backend('mido.backends.portmidi')
-
-import jx8p_patcher as jx8p
 
 # This is my midi controller, which has din-midi and usb-midi
 # the jx8p is connected to this controller
 # mo=portmidi.open_output("Bitstreama 3x")
 # mi=portmidi.open_input("Bitstream 3x")
 
+# opening portmidi ports
 # my_midi_controller = "LoopBe Internal MIDI"
 # mo=portmidi.open_output(my_midi_controller)
 # mi=portmidi.open_input(my_midi_controller)
 
+# opening virtual ports
 # virtual_name="jx8p_patcher"
 # vmo=rtmidi.open_output(virtual_name, virtual=True)
 # vmi=rtmidi.open_input(virtual_name, virtual=True)
