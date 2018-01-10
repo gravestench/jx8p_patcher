@@ -16,7 +16,7 @@ import mido
 
 class Patch:
   """
-  This class represents a JX-8P patch, and you can pass this bastard a
+  This class represents a synthesizer patch, and you can pass this bastard a
   a .syx file path when you instantiate it. you can do all kinds of cool shit
   with it from here.
 
@@ -24,110 +24,19 @@ class Patch:
   values (meaning that you can't use it to send patches from).
   """
   
-  def __init__(self, jx8p_sysex_file_path=None):
+  def __init__(self, sysex_definition_path=None, sysex_file_path=None):
     """
     Initialize blank (empty) patch state
 
-    we will load a sysex file if the filepath is passed
+    we will load a sysex file if the sysex_file_path is passed
 
     The parameter implementation is super ugly, and i have lots of copypasta
     I'd like to re-implement the way that 
     """
-    self.PATCH_PARAMETER_COUNT=59
-    self.SYSEX_ROLAND_ID = 0x41
-    self.parameters = [[None]]*self.PATCH_PARAMETER_COUNT
+    self.load_sysex_definition(sysex_definition_path)
 
-    # The patch parameters come straight from the manual
-    # even the undefined parameters are here. I may be able to store values there, even if
-    # The JX-8P doesn't do anything with them (which could be handy for storing bitmasks
-    # which identify which parameters should or should not be altered during
-    # patch interpolation or patch randomization/mutation, or even step-sequencer/arpeggiator
-    # step values). I'll play with this later and see if it works.
-    #
-    # The following just declares parameters without values. you can load a .syx file later,
-    # or you can set values explicitly by doing something like:
-    #
-    #     for parameter in patch.parameters:
-    #       parameter.value = x
-    #
-    # I know, I know, this code is fucking ugly as balls. I'll change it later.
-    # Parameter 20 is the fucking worst...
-    self.parameters[0] = Parameter('Character 1', [Parameter_state(127,'ASCII'), ord('B')])
-    self.parameters[1] = Parameter('Character 2', [Parameter_state(127,'ASCII'), ord('L')])
-    self.parameters[2] = Parameter('Character 3', [Parameter_state(127,'ASCII'), ord('A')])
-    self.parameters[3] = Parameter('Character 4', [Parameter_state(127,'ASCII'), ord('N')])
-    self.parameters[4] = Parameter('Character 5', [Parameter_state(127,'ASCII'), ord('K')])
-    self.parameters[5] = Parameter('Character 6', [Parameter_state(127,'ASCII'), ord('P')])
-    self.parameters[6] = Parameter('Character 7', [Parameter_state(127,'ASCII'), ord('A')])
-    self.parameters[7] = Parameter('Character 8', [Parameter_state(127,'ASCII'), ord('T')])
-    self.parameters[8] = Parameter('Character 9', [Parameter_state(127,'ASCII'), ord('C')])
-    self.parameters[9] = Parameter('Character 10', [Parameter_state(127,'ASCII'), ord('H')])
-  
-    self.parameters[10] = Parameter() # NOT DEFINED
-
-    self.parameters[11] = Parameter('DCO-1 RANGE', [Parameter_state(31,'16\''),Parameter_state(63,'8\''),Parameter_state(95,'4\''),Parameter_state(127,'2\'')])
-    self.parameters[12] = Parameter('DCO-1 WAVEFORM', [Parameter_state(31,'Noise'),Parameter_state(63,'Sawtooth'),Parameter_state(95,'Pulse'),Parameter_state(127,'Square')])
-    self.parameters[13] = Parameter('DCO-1 TUNE', [Parameter_state(5,'-12 Semitone'),Parameter_state(10,'-11 Semitone'),Parameter_state(15,'-10 Semitone'),Parameter_state(20,'-9 Semitone'),Parameter_state(25,'-8 Semitone'),Parameter_state(30,'-7 Semitone'),Parameter_state(35,'-6 Semitone'),Parameter_state(40,'-5 Semitone'),Parameter_state(45,'-4 Semitone'),Parameter_state(50,'-3 Semitone'),Parameter_state(55,'-2 Semitone'),Parameter_state(60,'-1 Semitone'),Parameter_state(66,'+0'),Parameter_state(71,'+1 Semitone'),Parameter_state(76,'+2 Semitone'),Parameter_state(81,'+3 Semitone'),Parameter_state(86,'+4 Semitone'),Parameter_state(91,'+5 Semitone'),Parameter_state(96,'+6 Semitone'),Parameter_state(101,'+7 Semitone'),Parameter_state(106,'+8 Semitone'),Parameter_state(111,'+9 Semitone'),Parameter_state(116,'+10 Semitone'),Parameter_state(121,'+11 Semitone'),Parameter_state(127,'+12 Semitone')])
-    self.parameters[14] = Parameter('DCO-1 LFO MOD DEPTH', [Parameter_state(127, 'VALUE')])
-    self.parameters[15] = Parameter('DCO-1 ENV MOD DEPTH', [Parameter_state(127, 'VALUE')])
-  
-    self.parameters[16] = Parameter('DCO-2 RANGE', [Parameter_state(31,'16\''),Parameter_state(63,'8\''),Parameter_state(95,'4\''),Parameter_state(127,'2\'')])
-    self.parameters[17] = Parameter('DCO-2 WAVEFORM', [Parameter_state(31,'Noise'),Parameter_state(63,'Sawtooth'),Parameter_state(95,'Pulse'),Parameter_state(127,'Square')])
-    self.parameters[18] = Parameter('DCO-2 CROSSMOD', [Parameter_state(31,'OFF'),Parameter_state(63,'Sync 1'),Parameter_state(95,'Sync 2'),Parameter_state(127,'XMOD')])
-    self.parameters[19] = Parameter('DCO-2 TUNE', [Parameter_state(5,'-12 Semitone'),Parameter_state(10,'-11 Semitone'),Parameter_state(15,'-10 Semitone'),Parameter_state(20,'-9 Semitone'),Parameter_state(25,'-8 Semitone'),Parameter_state(30,'-7 Semitone'),Parameter_state(35,'-6 Semitone'),Parameter_state(40,'-5 Semitone'),Parameter_state(45,'-4 Semitone'),Parameter_state(50,'-3 Semitone'),Parameter_state(55,'-2 Semitone'),Parameter_state(60,'-1 Semitone'),Parameter_state(66,'+0'),Parameter_state(71,'+1 Semitone'),Parameter_state(76,'+2 Semitone'),Parameter_state(81,'+3 Semitone'),Parameter_state(86,'+4 Semitone'),Parameter_state(91,'+5 Semitone'),Parameter_state(96,'+6 Semitone'),Parameter_state(101,'+7 Semitone'),Parameter_state(106,'+8 Semitone'),Parameter_state(111,'+9 Semitone'),Parameter_state(116,'+10 Semitone'),Parameter_state(121,'+11 Semitone'),Parameter_state(127,'+12 Semitone')])
-    self.parameters[20] = Parameter('DCO-2 FINE TUNE', [Parameter_state(1, '-50'), Parameter_state(2, '-49'), Parameter_state(3, '-48'), Parameter_state(5, '-47'), Parameter_state(6, '-46'), Parameter_state(7, '-45'), Parameter_state(8, '-44'), Parameter_state(10, '-43'), Parameter_state(11, '-42'), Parameter_state(12, '-41'), Parameter_state(13, '-40'), Parameter_state(15, '-39'), Parameter_state(16, '-38'), Parameter_state(17, '-37'), Parameter_state(18, '-36'), Parameter_state(20, '-35'), Parameter_state(21, '-34'), Parameter_state(22, '-33'), Parameter_state(23, '-32'), Parameter_state(25, '-31'), Parameter_state(26, '-30'), Parameter_state(27, '-29'), Parameter_state(28, '-28'), Parameter_state(30, '-27'), Parameter_state(31, '-26'), Parameter_state(32, '-25'), Parameter_state(33, '-24'), Parameter_state(35, '-23'), Parameter_state(36, '-22'), Parameter_state(37, '-21'), Parameter_state(38, '-20'), Parameter_state(40, '-19'), Parameter_state(41, '-18'), Parameter_state(42, '-17'), Parameter_state(44, '-16'), Parameter_state(45, '-15'), Parameter_state(46, '-14'), Parameter_state(47, '-13'), Parameter_state(49, '-12'), Parameter_state(50, '-11'), Parameter_state(51, '-10'), Parameter_state(52, '-9'), Parameter_state(54, '-8'), Parameter_state(55, '-7'), Parameter_state(56, '-6'), Parameter_state(57, '-5'), Parameter_state(59, '-4'), Parameter_state(60, '-3'), Parameter_state(61, '-2'), Parameter_state(62, '-1'), Parameter_state(64, '+0'), Parameter_state(65, '+1'), Parameter_state(66, '+2'), Parameter_state(67, '+3'), Parameter_state(69, '+4'), Parameter_state(70, '+5'), Parameter_state(71, '+6'), Parameter_state(72, '+7'), Parameter_state(73, '+8'), Parameter_state(74, '+8'), Parameter_state(75, '+9'), Parameter_state(76, '+10'), Parameter_state(77, '+11'), Parameter_state(79, '+12'), Parameter_state(80, '+13'), Parameter_state(81, '+14'), Parameter_state(82, '+15'), Parameter_state(84, '+16'), Parameter_state(85, '+17'), Parameter_state(86, '+18'), Parameter_state(88, '+19'), Parameter_state(89, '+20'), Parameter_state(90, '+21'), Parameter_state(91, '+22'), Parameter_state(93, '+23'), Parameter_state(94, '+24'), Parameter_state(95, '+25'), Parameter_state(96, '+26'), Parameter_state(98, '+27'), Parameter_state(99, '+28'), Parameter_state(100, '+29'), Parameter_state(101, '+30'), Parameter_state(103, '+31'), Parameter_state(104, '+32'), Parameter_state(105, '+33'), Parameter_state(106, '+34'), Parameter_state(108, '+35'), Parameter_state(109, '+36'), Parameter_state(110, '+37'), Parameter_state(111, '+38'), Parameter_state(113, '+39'), Parameter_state(114, '+40'), Parameter_state(115, '+41'), Parameter_state(116, '+42'), Parameter_state(118, '+43'), Parameter_state(119, '+44'), Parameter_state(120, '+45'), Parameter_state(121, '+46'), Parameter_state(123, '+47'), Parameter_state(124, '+48'), Parameter_state(125, '+49'), Parameter_state(127, '+50')])
-    self.parameters[21] = Parameter('DCO-2 LFO MOD DEPTH', [Parameter_state(127, 'VALUE')])
-    self.parameters[22] = Parameter('DCO-2 ENV MOD DEPTH', [Parameter_state(127, 'VALUE')])
-    
-    self.parameters[23] = Parameter() # NOT DEFINED
-    self.parameters[24] = Parameter() # NOT DEFINED
-    self.parameters[25] = Parameter() # NOT DEFINED
-    
-    self.parameters[26] = Parameter('DCO DYNAMICS', [Parameter_state(31,'Off'),Parameter_state(63,'1'),Parameter_state(95,'2'),Parameter_state(127,'3')])
-    self.parameters[27] = Parameter('DCO ENV MODE', [Parameter_state(31,'ENV-2 INVERTED'),Parameter_state(63,'ENV-2 NORMAL'),Parameter_state(95,'ENV-1 INVERTED'),Parameter_state(127,'ENV-1 NORMAL')])
-  
-    self.parameters[28] = Parameter('MIXER DCO-1', [Parameter_state(127, 'VALUE')])
-    self.parameters[29] = Parameter('MIXER DCO-2', [Parameter_state(127, 'VALUE')])
-    self.parameters[30] = Parameter('MIXER ENV MOD DEPTH', [Parameter_state(127, 'VALUE')])
-    self.parameters[31] = Parameter('MIXER DYNAMICS', [Parameter_state(31,'Off'),Parameter_state(63,'1'),Parameter_state(95,'2'),Parameter_state(127,'3')])
-    self.parameters[32] = Parameter('MIXER ENV MODE', [Parameter_state(31,'ENV-2 INVERTED'),Parameter_state(63,'ENV-2 NORMAL'),Parameter_state(95,'ENV-1 INVERTED'),Parameter_state(127,'ENV-1 NORMAL')])
-  
-    self.parameters[33] = Parameter('HPF CUTOFF FREQ', [Parameter_state(31,'0'),Parameter_state(63,'1'),Parameter_state(95,'2'),Parameter_state(127,'3')])
-    self.parameters[34] = Parameter('VCF CUTTOF FREQ', [Parameter_state(127, 'VALUE')])
-    self.parameters[35] = Parameter('VCF RESONANCE', [Parameter_state(127, 'VALUE')])
-    self.parameters[36] = Parameter('VCF LFO MOD DEPTH', [Parameter_state(127, 'VALUE')])
-    self.parameters[37] = Parameter('VCF ENV MOD DEPTH', [Parameter_state(127, 'VALUE')])
-    self.parameters[38] = Parameter('VCF KEY FOLLOW', [Parameter_state(127, 'VALUE')])
-    self.parameters[39] = Parameter('VCF DYNAMICS', [Parameter_state(31,'Off'),Parameter_state(63,'1'),Parameter_state(95,'2'),Parameter_state(127,'3')])
-    self.parameters[40] = Parameter('VCF ENV MODE', [Parameter_state(31,'ENV-2 INVERTED'),Parameter_state(63,'ENV-2 NORMAL'),Parameter_state(95,'ENV-1 INVERTED'),Parameter_state(127,'ENV-1 NORMAL')])
-  
-    self.parameters[41] = Parameter('VCA LEVEL', [Parameter_state(127, 'VALUE')])
-    self.parameters[42] = Parameter('VCA DYNAMICS', [Parameter_state(31,'Off'),Parameter_state(63,'1'),Parameter_state(95,'2'),Parameter_state(127,'3')])
-  
-    self.parameters[43] = Parameter('CHORUS', [Parameter_state(31,'Off'),Parameter_state(63,'1'),Parameter_state(127,'2')])
-
-    self.parameters[44] = Parameter('LFO WAVEFORM', [Parameter_state(31,'RANDOM'),Parameter_state(63,'SQUARE'),Parameter_state(127,'TRIANGLE')])
-    self.parameters[45] = Parameter('LFO DELAY TIME', [Parameter_state(127, 'VALUE')])
-    self.parameters[46] = Parameter('LFO RATE', [Parameter_state(127, 'VALUE')])
-
-    self.parameters[47] = Parameter('ENV-1 ATTACK', [Parameter_state(127, 'VALUE')])
-    self.parameters[48] = Parameter('ENV-1 DECAY', [Parameter_state(127, 'VALUE')])
-    self.parameters[49] = Parameter('ENV-1 SUSTAIN', [Parameter_state(127, 'VALUE')])
-    self.parameters[50] = Parameter('ENV-1 RELEASE', [Parameter_state(127, 'VALUE')])
-    self.parameters[51] = Parameter('ENV-1 KEY FOLLOW', [Parameter_state(31,'OFF'),Parameter_state(63,'1'),Parameter_state(95,'2'),Parameter_state(127,'3')])
-  
-    self.parameters[52] = Parameter('ENV-2 ATTACK', [Parameter_state(127, 'VALUE')])
-    self.parameters[53] = Parameter('ENV-2 DECAY', [Parameter_state(127, 'VALUE')])
-    self.parameters[54] = Parameter('ENV-2 SUSTAIN', [Parameter_state(127, 'VALUE')])
-    self.parameters[55] = Parameter('ENV-2 RELEASE', [Parameter_state(127, 'VALUE')])
-    self.parameters[56] = Parameter('ENV-2 KEY FOLLOW', [Parameter_state(31,'OFF'),Parameter_state(63,'1'),Parameter_state(95,'2'),Parameter_state(127,'3')])
-  
-    self.parameters[57] = Parameter() # NOT DEFINED
-  
-    self.parameters[58] = Parameter('VCA ENV MODE', [Parameter_state(63,'GATE'),Parameter_state(127,'ENV-2 NORMAL')])
-
-    if jx8p_sysex_file_path != None:
-      self.load_file(jx8p_sysex_file_path)
+    if sysex_file_path != None:
+      self.load_file(sysex_file_path)
 
   def load_file(self, jx8p_sysex_file_path=None, dbg=False):
     """
@@ -142,8 +51,8 @@ class Patch:
     
     if syx[0] != 0xF0:
       print 'INVALID SYX: MALFORMED HEADER'
-    if syx[1] != self.SYSEX_ROLAND_ID:
-      print 'INVALID SYX: ROLAND ID NOT PRESENT'
+    if syx[1] != self.MANUFACTURER_ID:
+      print 'INVALID SYX: MANUFACTURER_ID NOT PRESENT'
     
     # PROCESS AS `PROGRAM` MESSAGE
     if syx[2] == 0x34:
@@ -182,6 +91,65 @@ class Patch:
     if dbg==True:
       self.info()
     return self
+
+def load_sysex_definition(self, sysex_definition_path=None, dbg=False):
+    """
+    Given a path to a text file containing definition of sysex parameters, populate the Patch object with the sysex definition
+    """
+
+    print 'using', sysex_definition_path, 'sysex definition file'
+
+    if sysex_definition_path==None:
+        print('without your help, I do not understand sysex!')
+        return 1
+
+    with(f=open(sysex_definition_path)):
+        f_lines = f.readlines()
+
+        self.MANUFACTURER_ID = None
+        self.PATCH_PARAMETER_COUNT = None
+        self.parameters = [[None]]*self.PATCH_PARAMETER_COUNT
+
+        for line in f_lines:
+            if line.startswith('MANUFACTURER_ID='):
+                line.strip(' ')
+                line.strip('\n')
+                self.MANUFACTURER_ID = int(line[16:])
+
+            elif line.startswith('PATCH_PARAMETER_COUNT='):
+                line.strip(' ')
+                line.strip('\n')
+                self.PATCH_PARAMETER_COUNT = int(line[22:])
+
+            elif line.startswith('{'):
+                line.strip('\n')
+
+                PARAM_NUMBER = int(line[1:5])
+                line = line[6:]
+
+                line_array = line.split('[')
+
+                PARAM_NAME = line_array[0].strip("'")
+                PARAM_NAME = PARAM_NAME[:-1]
+
+                line_array[1] = line_array[1].split(']')
+                PARAM_DEFAULT = line_array[1][1].strip("'")
+                PARAM_DEFAULT = PARAM_DEFAULT[1:]
+                if not PARAM_DEFAULT.isdigit():
+                    PARAM_DEFAULT = ord(PARAM_DEFAULT)
+
+                LIMIT_ARRAY = line_array[1][0].split(")")
+                for value in LIMIT_ARRAY:
+                    value = value[1:]
+                    value = value.strip("(")
+                    value = value.split(",")
+                    value[0] = int(value[0])
+
+                    value = Parameter_state(value[0], value[1])
+
+                self.parameters[PARAM_NUMBER] = Parameter(PARAM_NAME, LIMIT_ARRAY, PARAM_DEFAULT)
+    if dbg == True:
+        print self.parameters
   
   def name(self):
     """
